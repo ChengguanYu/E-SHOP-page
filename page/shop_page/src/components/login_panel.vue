@@ -1,3 +1,35 @@
+<script setup>
+import "mdui/mdui.css";
+import "mdui";
+import { ref, computed } from "vue";
+var captcha = ref(false);
+const test = () => {
+  captcha.value = !captcha.value;
+  data.value.acc_up_length = "translateY(-45%)";
+  data.value.pwd_up_length = "translateY(-95%)";
+  data.value.cap_up_length = "10%";
+  data.value.cap_opacity = "1";
+};
+const data = ref({
+  acc_up_length: "translateY(0rem)",
+  pwd_up_length: "translateY(0rem)",
+  cap_up_length: "-10%",
+  cap_opacity: "0",
+});
+
+const account_Animetion = computed(() => ({
+  transform: data.value.acc_up_length,
+  transition: "all 0.8s",
+}));
+const password_Animetion = computed(() => ({
+  transform: data.value.pwd_up_length,
+  transition: "all 0.8s",
+}));
+const test_ = computed(() => ({
+  opacity: data.value.cap_opacity,
+  bottom: data.value.cap_up_length,
+}));
+</script>
 <template>
   <div id="Login-Title">
     <h1>登录</h1>
@@ -5,15 +37,15 @@
     <!-- 不加空格会导致Login和登录对不齐？？？？？？？？？？ -->
   </div>
   <div id="Login-form-Area">
-    <div class="Login-TextLine-Area">
+    <div class="Login-TextLine-Area" :style="account_Animetion">
       <input class="Login-TextLine" type="text" required />
       <label>Account</label>
     </div>
-    <div class="Login-TextLine-Area">
+    <div class="Login-TextLine-Area" :style="password_Animetion">
       <input class="Login-TextLine" type="password" required />
       <label>Password</label>
     </div>
-    <div class="Login-TextLine-Area">
+    <div class="Login-TextLine-Area Captcha" :style="test_">
       <input class="Login-TextLine" type="text" required />
       <label>Captcha</label>
     </div>
@@ -24,23 +56,50 @@
         <input type="checkbox" id="myCheckbox" class="hidden-checkbox" />
         <div class="checkbox-rect"></div>
         <div class="checkbox-rect-border"></div>
-        <label for="myCheckbox">记住我的账号</label>
+        <label class="click" for="myCheckbox"></label>
+        <label class="Tips" for="myCheckbox">记住我的账号</label>
         <a>忘记密码&nbsp;>></a>
       </div>
     </div>
-    <div id="submit">提交</div>
+    <div id="submit" @click="test"><p class="login-text">Login</p></div>
   </div>
 </template>
 
 <style scoped>
+.Captcha {
+  /* 由于flex没有提供过渡，这里手动设置
+  captcha 这里的验证框是突然出现在输入区域的，为了保证不会突然插入显得突兀，
+  这里使用absolute来脱离文档流，不占用空间，保证账号和密码框能够有时间上移
+   */
+  position: absolute !important;
+  bottom: -10%;
+  /* bottom: -2.5rem; */
+  opacity: 0;
+  transition: all 0.7s;
+}
+.login-text {
+  font-family: "ali";
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: white;
+  user-select: none; /*禁止用户框选*/
+  cursor: pointer;
+}
+
 #submit {
-  margin-top: 0.5rem;
+  margin: 0.5rem 0rem 0.5rem 0rem;
   background-color: rgb(252, 161, 6);
   border-radius: 0.3rem;
   height: 2.5rem;
   width: 90%;
+  display: flex;
+  align-items: center; /* 设置垂直居中 */
+  justify-content: center; /* 设置水平居中 */
+  transition: all 0.4s;
 }
-
+#submit:hover {
+  background-color: rgb(255, 182, 57);
+}
 input[type="checkbox"] {
   -webkit-appearance: none;
   appearance: none;
@@ -65,12 +124,20 @@ input[type="checkbox"] {
   z-index: 0;
   transition: all 0.2s;
 }
+.click {
+  position: absolute;
+  height: 1rem;
+  width: 1rem;
+  opacity: 0;
+  z-index: 30;
+  cursor: pointer;
+}
 .checkbox-rect::before {
   content: "✔";
   position: absolute;
   color: white;
   top: -25%;
-  left: 15%;
+  left: 13%;
   height: 1rem;
   width: 1rem;
 }
@@ -110,12 +177,14 @@ input[type="checkbox"] {
   right: 0px;
 }
 
-#Remember-box > label {
+#Remember-box > .Tips {
   pointer-events: auto; /*取消(被别的样式继承的)none效果，使label可以触发鼠标事件 */
   user-select: none; /*禁止用户框选*/
   cursor: pointer;
-  position: relative;
-  left: 0%;
+  font-weight: 600;
+  padding: 0rem 0.5rem 0rem 0.5rem;
+  /* position: relative;
+  left: 0%; */
 }
 
 @font-face {
@@ -127,6 +196,7 @@ input[type="checkbox"] {
   font-family: deyi;
 }
 #Login-Title {
+  /* background-color: aquamarine; */
   width: 100%;
   height: 20%;
   overflow: hidden;
@@ -143,8 +213,10 @@ input[type="checkbox"] {
   line-height: normal;
 }
 #Login-form-Area {
+  position: relative;
+  /* background-color: blueviolet; */
   width: 100%;
-  height: 50%;
+  height: 55%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -153,13 +225,14 @@ input[type="checkbox"] {
 #Login-form-Area::before {
   content: "";
   position: absolute;
-  top: 5rem;
+  top: 0rem;
   width: 100%;
   height: 1px;
   background-color: rgb(235, 235, 235);
 }
 
 .Login-TextLine-Area {
+  /* margin: 2rem; */
   position: relative;
   height: 2.5rem;
   width: 90%;
@@ -215,14 +288,10 @@ input[type="checkbox"] {
   /* background-color: aqua; */
   position: relative;
   width: 100%;
-  height: 30%;
+  height: 25%;
   display: flex;
   flex-direction: column;
   align-items: center;
   /* background-color: rgb(160, 255, 160); */
 }
 </style>
-<script setup>
-import "mdui/mdui.css";
-import "mdui";
-</script>

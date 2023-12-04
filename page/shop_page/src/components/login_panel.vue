@@ -13,21 +13,34 @@
       <input class="Login-TextLine" type="password" required />
       <label>Password</label>
     </div>
+    <div class="Login-TextLine-Area">
+      <input class="Login-TextLine" type="text" required />
+      <label>Captcha</label>
+    </div>
   </div>
   <div class="Login-submit-Area">
     <div class="Feature-Area">
       <div id="Remember-box">
         <input type="checkbox" id="myCheckbox" class="hidden-checkbox" />
         <div class="checkbox-rect"></div>
-        <div class="checkbox-rect-1"></div>
+        <div class="checkbox-rect-border"></div>
         <label for="myCheckbox">记住我的账号</label>
         <a>忘记密码&nbsp;>></a>
       </div>
     </div>
+    <div id="submit">提交</div>
   </div>
 </template>
 
 <style scoped>
+#submit {
+  margin-top: 0.5rem;
+  background-color: rgb(252, 161, 6);
+  border-radius: 0.3rem;
+  height: 2.5rem;
+  width: 90%;
+}
+
 input[type="checkbox"] {
   -webkit-appearance: none;
   appearance: none;
@@ -43,37 +56,47 @@ input[type="checkbox"] {
   opacity: 0;
   transition: transform 0.2s;
 }
-.checkbox-div {
-  position: relative;
-}
-.checkbox-rect-1 {
+.checkbox-rect-border {
   position: absolute;
   height: 1rem;
   width: 1rem;
-  border: 2px solid rgb(255, 149, 0);
+  border: 0.125rem solid rgb(33, 33, 33);
   border-radius: 0.125rem;
   z-index: 0;
+  transition: all 0.2s;
+}
+.checkbox-rect::before {
+  content: "✔";
+  position: absolute;
+  color: white;
+  top: -25%;
+  left: 15%;
+  height: 1rem;
+  width: 1rem;
 }
 #myCheckbox:checked + .checkbox-rect {
   transform: scale(1, 1);
-  background-color: rgb(255, 149, 0);
+  background-color: rgb(252, 161, 6);
   transition: transform 0.2s, opacity 0.2s;
   opacity: 1;
   z-index: 10;
 }
+#myCheckbox:checked ~ .checkbox-rect-border {
+  border: 0.125rem solid rgb(252, 161, 6);
+}
+
 #myCheckbox + .checkbox-rect {
   transform: scale(0.4, 0.4);
-  background-color: rgb(255, 149, 0);
+  background-color: rgb(252, 161, 6);
   transition: transform 0.5s, opacity 0.3s;
   opacity: 0;
   z-index: 10;
 }
+
 .Feature-Area {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  /* background-color: aquamarine; */
   width: 90%;
-  top: -1.8rem;
+  margin-bottom: 0.5rem;
 }
 .Feature-Area > #Remember-box {
   position: relative;
@@ -88,12 +111,13 @@ input[type="checkbox"] {
 }
 
 #Remember-box > label {
-  pointer-events: auto; /*取消none效果，使label可以触发鼠标事件 */
-  user-select: none; /*禁止用户框选s*/
+  pointer-events: auto; /*取消(被别的样式继承的)none效果，使label可以触发鼠标事件 */
+  user-select: none; /*禁止用户框选*/
   cursor: pointer;
   position: relative;
   left: 0%;
 }
+
 @font-face {
   src: url("../assets/font/AlimamaFangYuanTiVF-Thin-2.ttf");
   font-family: ali;
@@ -188,9 +212,13 @@ input[type="checkbox"] {
   color: #585858;
 }
 .Login-submit-Area {
+  /* background-color: aqua; */
   position: relative;
   width: 100%;
   height: 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   /* background-color: rgb(160, 255, 160); */
 }
 </style>

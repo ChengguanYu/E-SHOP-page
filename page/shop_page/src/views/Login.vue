@@ -1,12 +1,20 @@
 <script setup>
 import login from "../components/login_panel.vue";
+import { ref, onMounted } from "vue";
+
+const componentLoaded = ref(false);
+
+onMounted(() => {
+  // 在 onMounted 钩子中设置 componentLoaded 的值为 true，表示组件加载完毕
+  componentLoaded.value = true;
+});
 </script>
 
 <template>
   <div class="background"></div>
   <div class="loginCrad">
-    <div class="Pre-Login-Display">
-      <!-- Pre-Login-Display 在组件加载前显示一些图案，避免出现空白 -->
+    <!-- Pre-Login-Display 在组件加载前显示一些图案，避免出现空白 -->
+    <div v-if="!componentLoaded" class="Pre-Login-Display">
       <div class="Pre-login-Title"></div>
       <div class="Pre-Login-form-Area">
         <div class="Pre-Login-Account"></div>
@@ -14,8 +22,8 @@ import login from "../components/login_panel.vue";
       </div>
       <div class="Pre-Login-submit-Area"></div>
     </div>
-
-    <div id="login-panel">
+    <!-- 加载完毕后componentLoaded为true，将组件挂载在DIV上 -->
+    <div v-if="componentLoaded" id="login-panel">
       <login></login>
     </div>
   </div>
@@ -52,6 +60,7 @@ import login from "../components/login_panel.vue";
   width: 100%;
   height: 100%;
   border: none;
+  background-color: aqua;
 }
 .Pre-login-Title {
   width: 100%;
